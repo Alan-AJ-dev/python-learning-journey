@@ -1,21 +1,58 @@
 from tkinter import *
+import random
 from tkinter import messagebox
+import pyperclip
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
+from asyncio.windows_events import NULL
+from random import shuffle
+def generate_password():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+
+
+    nr_letters = 3
+    nr_symbols = 4
+    nr_numbers = 5
+
+    ran_password = ""
+    for let in range(nr_letters):
+        ran_password +=str(random.choice(letters))
+
+    for sym in range(nr_symbols):
+        ran_password +=str(random.choice(symbols))
+    for num in range(nr_numbers):
+        ran_password +=str(random.choice(numbers))
+    print(ran_password)
+    ran_password = list(ran_password)
+    shuf_pass =""
+    for i in range(len(ran_password)//2):
+        shuf_pass += str(ran_password[-i])
+    for i in range(len(ran_password)//2,len(ran_password)):
+        shuf_pass += str(ran_password[i])
+    password_entry.insert(0,shuf_pass)
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_data():
     website_data = website_entry.get()
     username = email_entry.get()
     password = password_entry.get()
-    is_ok = messagebox.askokcancel(title=website_data,message=f"These are the details entered: \n Username: {username} \n Password: {password}")
-    if is_ok:
-        with open("data.txt",mode="a") as file:
 
-            file.write(f"{website_data} | {username} | {password}\n")
+    if len(website_data) == 0  or len(username)== 0 or  len(password)== 0:
 
-        password_entry.delete(0,END)
-        website_entry.delete(0, END)
-        website_entry.focus()
+        canvas.create_text(110,190,text="Oops! Something went wrong!",fill="red")
+
+
+    else:
+        is_ok = messagebox.askokcancel(title=website_data,message=f"These are the details entered: \n Username: {username} \n Password: {password}")
+        if is_ok:
+            with open("data.txt",mode="a") as file:
+
+                file.write(f"{website_data} | {username} | {password}\n")
+
+            password_entry.delete(0,END)
+            website_entry.delete(0, END)
+            website_entry.focus()
 # ---------------------------- UI SETUP ------------------------------- #
 
 
@@ -55,7 +92,8 @@ password_entry.grid(row=3, column=1, sticky="W")
 
 generate_btn = Button(
     text="Generate Password",
-    width=15
+    width=15,
+    command=generate_password
 )
 generate_btn.grid(row=3, column=2, padx=(5,0),sticky="W")
 
