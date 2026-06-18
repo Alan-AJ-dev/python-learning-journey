@@ -3,7 +3,19 @@ from tkinter import messagebox
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+def save_data():
+    website_data = website_entry.get()
+    username = email_entry.get()
+    password = password_entry.get()
+    is_ok = messagebox.askokcancel(title=website_data,message=f"These are the details entered: \n Username: {username} \n Password: {password}")
+    if is_ok:
+        with open("data.txt",mode="a") as file:
 
+            file.write(f"{website_data} | {username} | {password}\n")
+
+        password_entry.delete(0,END)
+        website_entry.delete(0, END)
+        website_entry.focus()
 # ---------------------------- UI SETUP ------------------------------- #
 
 
