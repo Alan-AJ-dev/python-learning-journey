@@ -2,6 +2,7 @@ from tkinter import *
 import random
 from tkinter import messagebox
 import pyperclip
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 from asyncio.windows_events import NULL
@@ -32,12 +33,18 @@ def generate_password():
     for i in range(len(ran_password)//2,len(ran_password)):
         shuf_pass += str(ran_password[i])
     password_entry.insert(0,shuf_pass)
+    pyperclip.copy(shuf_pass)
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_data():
     website_data = website_entry.get()
     username = email_entry.get()
     password = password_entry.get()
-
+    new_data = {
+        website_data:{
+           "email" : username,
+            "password" : password
+        }
+    }
     if len(website_data) == 0  or len(username)== 0 or  len(password)== 0:
 
         canvas.create_text(110,190,text="Oops! Something went wrong!",fill="red")
@@ -46,9 +53,25 @@ def save_data():
     else:
         is_ok = messagebox.askokcancel(title=website_data,message=f"These are the details entered: \n Username: {username} \n Password: {password}")
         if is_ok:
-            with open("data.txt",mode="a") as file:
+            try:
 
-                file.write(f"{website_data} | {username} | {password}\n")
+                with open("data.json","r") as file:
+                    data = json.load(file)
+                    print(data)
+                    data.update(new_data)
+                with open("data.json", "w") as file:
+                     json.dump(data, file, indent=4)
+
+
+            except :
+                with open("data.json", "w") as file:
+                     json.dump(new_data, file, indent=4)
+            else:
+                print("success")
+
+
+
+
 
             password_entry.delete(0,END)
             website_entry.delete(0, END)
