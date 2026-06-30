@@ -1,6 +1,8 @@
 from tkinter import *
 import random
 from tkinter import messagebox
+from xml.etree.ElementTree import indent
+
 import pyperclip
 import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -34,6 +36,23 @@ def generate_password():
         shuf_pass += str(ran_password[i])
     password_entry.insert(0,shuf_pass)
     pyperclip.copy(shuf_pass)
+
+def search():
+    website = website_entry.get()
+    with open("data.json","r") as file:
+        data = json.load(file)
+        try:
+            username = data[website]['email']
+            password = data[website]['password']
+            messagebox.askokcancel(title=website,message=f"These are the stored Credentials: \n Username: {username} \n Password: {password}")
+
+            pyperclip.copy(password)
+        except :
+            messagebox.askokcancel(title="Error",
+                                   message="File not Found")
+
+
+
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_data():
     website_data = website_entry.get()
@@ -48,26 +67,23 @@ def save_data():
     if len(website_data) == 0  or len(username)== 0 or  len(password)== 0:
 
         canvas.create_text(110,190,text="Oops! Something went wrong!",fill="red")
-
-
     else:
         is_ok = messagebox.askokcancel(title=website_data,message=f"These are the details entered: \n Username: {username} \n Password: {password}")
         if is_ok:
             try:
 
-                with open("data.json","r") as file:
+                with open("data.json", "r") as file:
                     data = json.load(file)
-                    print(data)
                     data.update(new_data)
                 with open("data.json", "w") as file:
-                     json.dump(data, file, indent=4)
-
-
+                    json.dump(data, file, indent=4)
             except :
                 with open("data.json", "w") as file:
-                     json.dump(new_data, file, indent=4)
+                    json.dump(new_data, file, indent=4)
             else:
                 print("success")
+
+
 
 
 
@@ -127,5 +143,11 @@ add_btn = Button(
 )
 add_btn.grid(row=4, column=1, columnspan=2, pady=10,sticky="W")
 
-window.mainloop()
+search_btn = Button(
+    text="Search",
+    width=13,
+    command=search
+)
+search_btn.grid(row=1, column=2,  pady=20)
+
 window.mainloop()
