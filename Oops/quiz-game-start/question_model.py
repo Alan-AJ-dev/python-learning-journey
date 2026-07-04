@@ -9,8 +9,8 @@ class QuestionBank():
      def create_question_bank(self,question_data):
         question_bank = []
         for i in range(len(question_data)):
-            text = question_data[i]["text"]
-            ans = question_data[i]["answer"]
+            text = question_data[i]["question"]
+            ans = question_data[i]["correct_answer"]
             new_question = Question(text,ans)
             question_bank.append(new_question)
         return question_bank
