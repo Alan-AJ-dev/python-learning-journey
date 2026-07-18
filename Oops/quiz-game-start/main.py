@@ -1,6 +1,6 @@
-from data import question_data
-from question_model import Question,QuestionBank
-from quiz_brain import QuizBrain
+
+from ui import *
+
 
 
 question_set = QuestionBank()
@@ -13,9 +13,12 @@ quiz_brain = QuizBrain(question_bank_1)
 exit = False
 
 score = 0
+ui = QuizInterface(quiz_brain)
 
-while not exit and quiz_brain.still_remain():
-    exit = quiz_brain.next_question()
+
+
+
+
 
 
 
